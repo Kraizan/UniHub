@@ -1,5 +1,6 @@
 package com.kraizan.productms.product;
 
+import com.kraizan.productms.product.dto.ProductSellerDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductSellerDTO>> getAllProducts() {
+        List<ProductSellerDTO> products = productService.getAllProducts();
         if (products.isEmpty()) {
             return new ResponseEntity<>(products, HttpStatus.NO_CONTENT);
         } else {
