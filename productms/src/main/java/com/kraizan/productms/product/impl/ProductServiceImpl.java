@@ -5,10 +5,11 @@ import com.kraizan.productms.product.ProductRepository;
 import com.kraizan.productms.product.ProductService;
 import com.kraizan.productms.product.dto.ProductSellerDTO;
 import com.kraizan.productms.product.external.Seller;
+import com.kraizan.productms.product.mapper.ProductMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,17 +18,21 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     private ProductSellerDTO convertToProductSellerDTO(Product product){
-        RestTemplate restTemplate = new RestTemplate();
         Seller seller = restTemplate.getForObject(
-                "http://localhost:8081/api/v1/sellers/" + product.getSellerId(),
+                "http://SELLERMS:8081/api/v1/sellers/" + product.getSellerId(),
                 Seller.class
             );
-        return new ProductSellerDTO(product, seller);
+        ProductMapper productMapper = new ProductMapper();
+        ProductSellerDTO productSellerDTO = productMapper.mapToProductSellerDTO(product, seller);
+        return productSellerDTO;
     }
 
     @Override
@@ -39,8 +44,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductSellerDTO getProductById(Long id) {
+        Product product = productRepository.findById(id).orElse(null);
+        assert product != null;
+        return convertToProductSellerDTO(product);
     }
 
     @Override

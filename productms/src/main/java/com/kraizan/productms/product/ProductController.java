@@ -18,11 +18,11 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductSellerDTO>> getAllProducts() {
-        List<ProductSellerDTO> products = productService.getAllProducts();
-        if (products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.NO_CONTENT);
+        List<ProductSellerDTO> productSellerDTO = productService.getAllProducts();
+        if (productSellerDTO.isEmpty()) {
+            return new ResponseEntity<>(productSellerDTO, HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(products, HttpStatus.OK);
+            return new ResponseEntity<>(productSellerDTO, HttpStatus.OK);
         }
     }
 
@@ -37,10 +37,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Product product = productService.getProductById(id);
-        if (product != null) {
-            return new ResponseEntity<>(product, HttpStatus.OK);
+    public ResponseEntity<ProductSellerDTO> getProductById(@PathVariable Long id) {
+        ProductSellerDTO productSellerDTO = productService.getProductById(id);
+        if (productSellerDTO != null) {
+            return new ResponseEntity<>(productSellerDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
