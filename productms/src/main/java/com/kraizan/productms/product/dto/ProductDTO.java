@@ -1,19 +1,21 @@
 package com.kraizan.productms.product.dto;
 
-import com.kraizan.productms.product.Product;
+import com.kraizan.productms.product.external.Review;
 import com.kraizan.productms.product.external.Seller;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-public class ProductSellerDTO {
+public class ProductDTO {
     private Long id;
     private Long sellerId;
     private String name;
     private String description;
     private BigDecimal price;
     private Seller seller;
+    private List<Review> reviews;
 
-    public ProductSellerDTO() {
+    public ProductDTO() {
     }
 
     public Long getId() {
@@ -62,5 +64,13 @@ public class ProductSellerDTO {
 
     public void setSeller(Seller seller) {
         this.seller = seller;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

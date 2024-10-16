@@ -3,12 +3,13 @@ package com.kraizan.productms.product.impl;
 import com.kraizan.productms.product.Product;
 import com.kraizan.productms.product.ProductRepository;
 import com.kraizan.productms.product.ProductService;
-import com.kraizan.productms.product.dto.ProductSellerDTO;
+import com.kraizan.productms.product.clients.ReviewClient;
+import com.kraizan.productms.product.clients.SellerClient;
+import com.kraizan.productms.product.dto.ProductDTO;
+import com.kraizan.productms.product.external.Review;
 import com.kraizan.productms.product.external.Seller;
 import com.kraizan.productms.product.mapper.ProductMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,26 +18,25 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final SellerClient sellerClient;
+    private final ReviewClient reviewClient;
 
-    @Autowired
-    RestTemplate restTemplate;
-
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, SellerClient sellerClient, ReviewClient reviewClient) {
         this.productRepository = productRepository;
+        this.sellerClient = sellerClient;
+        this.reviewClient = reviewClient;
     }
 
-    private ProductSellerDTO convertToProductSellerDTO(Product product){
-        Seller seller = restTemplate.getForObject(
-                "http://SELLERMS:8081/api/v1/sellers/" + product.getSellerId(),
-                Seller.class
-            );
+    private ProductDTO convertToProductSellerDTO(Product product){
+        Seller seller = sellerClient.getSeller(product.getSellerId());
+        List<Review> reviews = reviewClient.getReviews(product.getSellerId());
         ProductMapper productMapper = new ProductMapper();
-        ProductSellerDTO productSellerDTO = productMapper.mapToProductSellerDTO(product, seller);
-        return productSellerDTO;
+        ProductDTO productDTO = productMapper.mapToProductSellerDTO(product, seller, reviews);
+        return productDTO;
     }
 
     @Override
-    public List<ProductSellerDTO> getAllProducts() {
+    public List<ProductDTO> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
                 .map(this::convertToProductSellerDTO)
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductSellerDTO getProductById(Long id) {
+    public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id).orElse(null);
         assert product != null;
         return convertToProductSellerDTO(product);

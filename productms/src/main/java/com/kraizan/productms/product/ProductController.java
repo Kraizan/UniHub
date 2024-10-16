@@ -1,6 +1,6 @@
 package com.kraizan.productms.product;
 
-import com.kraizan.productms.product.dto.ProductSellerDTO;
+import com.kraizan.productms.product.dto.ProductDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +17,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductSellerDTO>> getAllProducts() {
-        List<ProductSellerDTO> productSellerDTO = productService.getAllProducts();
-        if (productSellerDTO.isEmpty()) {
-            return new ResponseEntity<>(productSellerDTO, HttpStatus.NO_CONTENT);
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> productDTO = productService.getAllProducts();
+        if (productDTO.isEmpty()) {
+            return new ResponseEntity<>(productDTO, HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(productSellerDTO, HttpStatus.OK);
+            return new ResponseEntity<>(productDTO, HttpStatus.OK);
         }
     }
 
@@ -37,10 +37,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductSellerDTO> getProductById(@PathVariable Long id) {
-        ProductSellerDTO productSellerDTO = productService.getProductById(id);
-        if (productSellerDTO != null) {
-            return new ResponseEntity<>(productSellerDTO, HttpStatus.OK);
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        ProductDTO productDTO = productService.getProductById(id);
+        if (productDTO != null) {
+            return new ResponseEntity<>(productDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

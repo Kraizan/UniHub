@@ -1,12 +1,12 @@
 package com.kraizan.productms.product;
 
-import com.kraizan.productms.product.dto.ProductSellerDTO;
+import com.kraizan.productms.product.dto.ProductDTO;
 
 import java.util.List;
 
 public interface ProductService {
-    List<ProductSellerDTO> getAllProducts();
-    ProductSellerDTO getProductById(Long id);
+    List<ProductDTO> getAllProducts();
+    ProductDTO getProductById(Long id);
     boolean addProduct(Product product);
     boolean updateProduct(Long id, Product updatedProduct);
     boolean deleteProduct(Long id);
