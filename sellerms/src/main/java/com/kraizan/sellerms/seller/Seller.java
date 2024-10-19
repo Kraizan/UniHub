@@ -9,6 +9,7 @@ public class Seller {
     private Long id;
     private String name;
     private String description;
+    private Double rating;
 
     public Seller() {}
 
@@ -16,6 +17,7 @@ public class Seller {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.rating = 0.0;
     }
 
     public Long getId() {
@@ -40,5 +42,13 @@ public class Seller {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }

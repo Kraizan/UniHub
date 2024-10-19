@@ -1,4 +1,4 @@
-package com.kraizan.reviewms.review.messaging;
+package com.kraizan.sellerms.seller.messaging;
 
 
 import org.springframework.amqp.core.Queue;

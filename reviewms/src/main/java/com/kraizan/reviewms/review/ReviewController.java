@@ -1,5 +1,6 @@
 package com.kraizan.reviewms.review;
 
+import com.kraizan.reviewms.review.messaging.ReviewMessageProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +11,11 @@ import java.util.List;
 @RequestMapping("/reviews")
 public class ReviewController {
     private final ReviewService reviewService;
+    private final ReviewMessageProducer reviewMessageProducer;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService, ReviewMessageProducer reviewMessageProducer) {
         this.reviewService = reviewService;
+        this.reviewMessageProducer = reviewMessageProducer;
     }
 
     @GetMapping
@@ -29,6 +32,7 @@ public class ReviewController {
     public ResponseEntity<String> addReview(@RequestParam Long sellerId, @RequestBody Review review) {
         boolean isAdded = reviewService.addReview(sellerId, review);
         if (isAdded) {
+            reviewMessageProducer.sendMessage(review);
             return new ResponseEntity<>("Review added successfully", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Failed to add review", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -63,6 +67,12 @@ public class ReviewController {
         } else {
             return new ResponseEntity<>("Failed to delete review", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/averageRating")
+    public ResponseEntity<Double> getAverageRating(@RequestParam Long sellerId){
+        List<Review> reviews = reviewService.getAllReviews(sellerId);
+        return new ResponseEntity<>(reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0), HttpStatus.OK);
     }
 }
 

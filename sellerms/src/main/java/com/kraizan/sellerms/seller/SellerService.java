@@ -1,5 +1,7 @@
 package com.kraizan.sellerms.seller;
 
+import com.kraizan.sellerms.seller.dto.ReviewMessage;
+
 import java.util.List;
 
 public interface SellerService {
@@ -8,4 +10,5 @@ public interface SellerService {
     Seller getSellerById(Long id);
     boolean updateSeller(Long id, Seller updatedSeller);
     boolean deleteSeller(Long id);
+    void updateSellerRating(ReviewMessage reviewMessage);
 }
