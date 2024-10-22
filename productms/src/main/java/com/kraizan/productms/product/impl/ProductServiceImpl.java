@@ -3,51 +3,27 @@ package com.kraizan.productms.product.impl;
 import com.kraizan.productms.product.Product;
 import com.kraizan.productms.product.ProductRepository;
 import com.kraizan.productms.product.ProductService;
-import com.kraizan.productms.product.clients.ReviewClient;
-import com.kraizan.productms.product.clients.SellerClient;
-import com.kraizan.productms.product.dto.ProductDTO;
-import com.kraizan.productms.product.external.Review;
-import com.kraizan.productms.product.external.Seller;
-import com.kraizan.productms.product.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
-    private final SellerClient sellerClient;
-    private final ReviewClient reviewClient;
 
-    public ProductServiceImpl(ProductRepository productRepository, SellerClient sellerClient, ReviewClient reviewClient) {
+    public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.sellerClient = sellerClient;
-        this.reviewClient = reviewClient;
-    }
-
-    private ProductDTO convertToProductSellerDTO(Product product){
-        Seller seller = sellerClient.getSeller(product.getSellerId());
-        List<Review> reviews = reviewClient.getReviews(product.getSellerId());
-        ProductMapper productMapper = new ProductMapper();
-        ProductDTO productDTO = productMapper.mapToProductSellerDTO(product, seller, reviews);
-        return productDTO;
     }
 
     @Override
-    public List<ProductDTO> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(this::convertToProductSellerDTO)
-                .collect(Collectors.toList());
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     @Override
-    public ProductDTO getProductById(Long id) {
-        Product product = productRepository.findById(id).orElse(null);
-        assert product != null;
-        return convertToProductSellerDTO(product);
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElse(null);
     }
 
     @Override
