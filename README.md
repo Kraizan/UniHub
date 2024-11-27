@@ -11,6 +11,7 @@ UniHub is a microservices-based application designed to manage users, products, 
 - **Spring Cloud Gateway**
 - **PostgreSQL**
 - **Docker & Docker Compose**
+- **Zipkin for Distributed Tracing**
 
 ## Architecture
 
@@ -29,6 +30,7 @@ The project is divided into several microservices, each responsible for a specif
 - **Transaction Management**: Create, update, delete, and retrieve transaction information.
 - **Service Discovery**: Dynamic discovery of microservices using Eureka.
 - **API Gateway**: Centralized routing of requests to the appropriate microservices.
+- **Distributed Tracing**: Track and monitor requests across microservices using Zipkin.
 
 ## Microservices
 
